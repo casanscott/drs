@@ -2,7 +2,7 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+The **drs** package is intended to be used by Formula 1 fans who are would like to explore, plot, or model data from the formula1.com website. 
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -15,17 +15,17 @@ knitr::opts_chunk$set(
 
 # drs
 
-<!-- badges: start -->
-<!-- badges: end -->
+<img src="man/figures/logo.png" align="right" height="106" alt="" />
 
-The goal of drs is to ...
+
+The **drs** package is intended to be used by Formula 1 fans who are would like to explore, plot, or model data from the formula1.com website. 
 
 ## Installation
 
 You can install the development version of drs like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+https://github.com/casanscott/drs
 ```
 
 ## Example
