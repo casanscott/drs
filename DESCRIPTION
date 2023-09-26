@@ -1,12 +1,11 @@
 Package: drs
-Title: DRS: Data for Racing Simulations
+Title: Data for Racing Simulations
 Version: 0.0.0.9000
 Authors@R: 
     person("Casan", "Scott", , "casanscott@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "0000-0002-2839-6284"))
 Description: The drs package scrapes data from formula1.com and reformats the data to aid in plotting, modeling, and other uses.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
