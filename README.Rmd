@@ -2,7 +2,7 @@
 output: github_document
 ---
 
-The **drs** package is intended to be used by Formula 1 fans who are would like to explore, plot, or model data from the formula1.com website. 
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -14,12 +14,21 @@ knitr::opts_chunk$set(
 ```
 
 
+<img src="drs_logo.png" align="right" height="212" alt="" />
 
+<br />
+<br />
+<br />
 
-# drs <img src="drs_logo.png" align="right" height="106" alt="" />
+# DRS
+<br />
 
 
 The **drs** package is intended to be used by Formula 1 fans who are would like to explore, plot, or model data from the formula1.com website. 
+
+<br />
+
+
 
 ## Installation
 
@@ -29,27 +38,26 @@ You can install the development version of drs like so:
 https://github.com/casanscott/drs
 ```
 
-## Example
+## Examples
 
-This is a basic example which shows you how to solve a common problem:
 
-```{r example}
+To scrape the starting grids for every Grand Prix during 2022, use the following function call:
+
+```{r example 1}
 library(drs)
-## basic example code
+
+# starting_grid_scraper(2022)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
-```{r cars}
-summary(cars)
+
+To scrape the race results for every Grand Prix during 2022, use the following function call:
+
+```{r example 2}
+
+# race_result_scraper(2022)
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
 
-You can also embed plots, for example:
 
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
