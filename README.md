@@ -3,9 +3,7 @@ The **drs** package is intended to be used by Formula 1 fans who are
 would like to explore, plot, or model data from the formula1.com
 website.
 
-# drs
-
-<img src="man/figures/logo.png" align="right" height="106" alt="" />
+# drs <img src="man/figures/logo.png" align="right" height="106" alt="" />
 
 The **drs** package is intended to be used by Formula 1 fans who are
 would like to explore, plot, or model data from the formula1.com
