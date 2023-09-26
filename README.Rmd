@@ -22,6 +22,7 @@ knitr::opts_chunk$set(
 
 # DRS
 <br />
+<br />
 
 
 **drs** is an R package that utilizes functions from **rvest** and **dplyr** to scrape and tidy data from the formula1.com website. It is designed to scrape data for all Grand Prix weekends during a given year. A Grand Prix weekend consists of practice sessions, qualifying, and a race. Additionally, some weekends will also include a sprint race (an abbreviated sprint race that is typically about 1/3 the length of a normal race). 

@@ -5,7 +5,7 @@
 
 # DRS
 
-<br />
+<br /> <br />
 
 **drs** is an R package that utilizes functions from **rvest** and
 **dplyr** to scrape and tidy data from the formula1.com website. It is
