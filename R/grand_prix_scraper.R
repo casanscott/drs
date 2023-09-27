@@ -8,6 +8,7 @@
 #' @import dplyr
 #' @import tidyr
 #' @import stringr
+#' @import lubridate
 #' @export
 #'
 #' @examples
@@ -70,7 +71,9 @@ starting_grid_scraper <- function(year) {
     separate(Driver, c("First", "Last", "Driver")) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
-    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year)
+    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year) %>%
+    mutate(Time_secs = ifelse(Race == 'sakhir', paste0("0:", Time), Time),
+           Time_secs = period_to_seconds(ms(Time_secs)))
 
   return(qualifying_times)
 }
@@ -86,6 +89,7 @@ starting_grid_scraper <- function(year) {
 #' @import rvest
 #' @import dplyr
 #' @import tidyr
+#'@import lubridate
 #' @export
 #'
 #' @examples
@@ -151,7 +155,9 @@ race_result_scraper <- function(year) {
                   'Laps' = 'laps',
                   'Points' = 'pts') %>%
     dplyr::select(Position, CarNumber, First, Last, Driver, Car, Laps, Time, Points,
-                  Race, Circuit, Year)
+                  Race, Circuit, Year) %>%
+    mutate(Time_secs = ifelse(Race == 'sakhir', paste0("0:", Time), Time),
+           Time_secs = period_to_seconds(ms(Time_secs)))
 
 
 
@@ -168,6 +174,7 @@ race_result_scraper <- function(year) {
 #' @import rvest
 #' @import dplyr
 #' @import tidyr
+#' @import lubridate
 #' @export
 #'
 #' @examples
@@ -231,7 +238,9 @@ sprint_grid_scraper <- function(year) {
     separate(Driver, c("First", "Last", "Driver")) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
-    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year)
+    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year) %>%
+    mutate(Time_secs = ifelse(Race == 'sakhir', paste0("0:", Time), Time),
+           Time_secs = period_to_seconds(ms(Time_secs)))
 
 
 
@@ -250,6 +259,7 @@ sprint_grid_scraper <- function(year) {
 #' @import rvest
 #' @import dplyr
 #' @import tidyr
+#' @import lubridate
 #' @export
 #'
 #' @examples
@@ -315,7 +325,9 @@ practice_session_scraper <- function(year, practice_session_number) {
     separate(Driver, c("First", "Last", "Driver")) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
-    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year)
+    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year) %>%
+    mutate(Time_secs = ifelse(Race == 'sakhir', paste0("0:", Time), Time),
+           Time_secs = period_to_seconds(ms(Time_secs)))
 
   return(practice_times)
 }
@@ -330,6 +342,7 @@ practice_session_scraper <- function(year, practice_session_number) {
 #' @import rvest
 #' @import dplyr
 #' @import tidyr
+#' @import lubridate
 #' @export
 #'
 #' @examples
@@ -392,7 +405,13 @@ qualifying_scraper <- function(year) {
     separate(Driver, c("First", "Last", "Driver")) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
-    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Laps, Q1, Q2, Q3, Race, Circuit, Year)
+    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Laps, Q1, Q2, Q3, Race, Circuit, Year) %>%
+    mutate(Q1_secs = ifelse(Race == 'sakhir', paste0("0:", Q1), Q1),
+           Q1_secs = period_to_seconds(ms(Q1_secs)),
+           Q2_secs = ifelse(Race == 'sakhir', paste0("0:", Q2), Q2),
+           Q2_secs = period_to_seconds(ms(Q2_secs)),
+           Q3_secs = ifelse(Race == 'sakhir', paste0("0:", Q3), Q3),
+           Q3_secs = period_to_seconds(ms(Q3_secs)))
 
   return(qualifying_times)
 }
