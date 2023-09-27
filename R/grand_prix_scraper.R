@@ -157,7 +157,15 @@ race_result_scraper <- function(year) {
     dplyr::select(Position, CarNumber, First, Last, Driver, Car, Laps, Time, Points,
                   Race, Circuit, Year) %>%
     mutate(Time_secs = ifelse(Race == 'sakhir', paste0("0:", Time), Time),
-           Time_secs = period_to_seconds(ms(Time_secs)))
+           Time_secs = period_to_seconds(ms(Time_secs))) %>%
+    group_by(Race) %>%
+    mutate(fastest_time = ifelse(Position == 1,
+                                 lubridate::period_to_seconds(hms(str_replace(Time, "0 days 0", ""))),
+                                 NA),
+           fastest_time = ifelse(Position == 1, fastest_time, min(fastest_time, na.rm = T)),
+           Time_secs = ifelse(Position == 1, fastest_time, Time_secs + fastest_time)) %>%
+    dplyr::select(-fastest_time) %>%
+    ungroup()
 
 
 
