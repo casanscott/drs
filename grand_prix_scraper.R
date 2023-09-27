@@ -1,0 +1,400 @@
+#' Scrape the formula1.com website for starting grids for each Grand Prix for a given year.
+#'
+#' @param year A numeric value.
+#'
+#' @return A dataframe.
+#' @import tidyverse
+#' @import rvest
+#' @import dplyr
+#' @import tidyr
+#' @import stringr
+#' @export
+#'
+#' @examples
+#' year <- 2022
+#' starting_grid_scraper(year)
+starting_grid_scraper <- function(year) {
+
+  temp_year <- year
+
+  f1_races_starts <- data.frame(
+    empty_1 <- integer(),
+    Pos <- integer(),
+    No <- integer(),
+    Driver <- character(),
+    Car <- character(),
+    Time <- character(),
+    empty_2 <- integer(),
+    race <- character(),
+    year <- integer())
+
+
+  temp_df <- grid_urls %>%
+    dplyr::filter(year == temp_year)
+
+  for (i in 1:length(temp_df$year_index)){
+
+    temp_circuit <- temp_df$circuit[i]
+
+    url_num <- temp_df$url[i]
+
+    url <- paste0("https://www.formula1.com/en/results.html/",temp_year,"/races/", url_num, "/",
+                  temp_circuit,"/starting-grid.html")
+
+    f1_races_html <- read_html(url)
+
+    temp_start <- f1_races_html %>%
+      html_element("table.resultsarchive-table") %>%
+      html_table() %>%
+      as.data.frame()
+
+    names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "Time", "empty_2")
+
+    temp_race <- temp_df$race[i]
+
+    temp_start <- temp_start %>%
+      mutate(Race = temp_race,
+             Circuit = temp_circuit,
+             Year = temp_year)
+
+
+
+
+
+    f1_races_starts <- rbind(f1_races_starts, temp_start)
+
+  }
+
+  qualifying_times <- f1_races_starts %>%
+    mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
+    separate(Driver, c("First", "Last", "Driver")) %>%
+    dplyr::rename('Position' = 'Pos',
+                  'CarNumber' = 'No') %>%
+    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year)
+
+  return(qualifying_times)
+}
+
+
+
+#' Scrape the formula1.com website for race results for each Grand Prix for a given year.
+#'
+#' @param year A numeric value.
+#'
+#' @return A dataframe.
+#' @import tidyverse
+#' @import rvest
+#' @import dplyr
+#' @import tidyr
+#' @export
+#'
+#' @examples
+#' year <- 2022
+#' race_result_scraper(year)
+race_result_scraper <- function(year) {
+
+  temp_year <- year
+
+  f1_races_starts <- data.frame(
+    empty_1 <- integer(),
+    Pos <- integer(),
+    No <- integer(),
+    Driver <- character(),
+    Car <- character(),
+    Time <- character(),
+    empty_2 <- integer(),
+    race <- character(),
+    year <- integer())
+
+
+  temp_df <- race_urls %>%
+    dplyr::filter(year == temp_year)
+
+  for (i in 1:length(temp_df$year_index)){
+
+    temp_circuit <- temp_df$circuit[i]
+
+    url_num <- temp_df$url[i]
+
+    url <- paste0("https://www.formula1.com/en/results.html/",temp_year,"/races/", url_num, "/",
+                  temp_circuit,"/race-result.html")
+
+    f1_races_html <- read_html(url)
+
+    temp_start <- f1_races_html %>%
+      html_element("table.resultsarchive-table") %>%
+      html_table() %>%
+      as.data.frame()
+
+    names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "laps", "Time", "pts", "empty_2")
+
+    temp_race <- temp_df$race[i]
+
+    temp_start <- temp_start %>%
+      mutate(Race = temp_race,
+             Circuit = temp_circuit,
+             Year = temp_year)
+
+
+
+
+
+    f1_races_starts <- rbind(f1_races_starts, temp_start)
+
+  }
+
+  race_times <- f1_races_starts %>%
+    mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
+    separate(Driver, c("First", "Last", "Driver")) %>%
+    dplyr::rename('Position' = 'Pos',
+                  'CarNumber' = 'No',
+                  'Laps' = 'laps',
+                  'Points' = 'pts') %>%
+    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Laps, Time, Points,
+                  Race, Circuit, Year)
+
+
+
+
+  return(race_times)
+}
+
+#' Scrape the formula1.com website for sprint grids for each sprint weekend for a given year.
+#'
+#' @param year A numeric value.
+#'
+#' @return A dataframe.
+#' @import tidyverse
+#' @import rvest
+#' @import dplyr
+#' @import tidyr
+#' @export
+#'
+#' @examples
+#' year <- 2022
+#' sprint_grid_scraper(year)
+sprint_grid_scraper <- function(year) {
+
+  temp_year <- year
+
+  f1_races_starts <- data.frame(
+    empty_1 <- integer(),
+    Pos <- integer(),
+    No <- integer(),
+    Driver <- character(),
+    Car <- character(),
+    Time <- character(),
+    empty_2 <- integer(),
+    race <- character(),
+    year <- integer())
+
+
+  temp_df <- race_urls %>%
+    dplyr::filter(is.na(year_index)) %>%
+    dplyr::filter(year == temp_year)
+
+  for (i in 1:length(temp_df$year_index)){
+
+    temp_circuit <- temp_df$circuit[i]
+
+    url_num <- temp_df$url[i]
+
+    url <- paste0("https://www.formula1.com/en/results.html/",temp_year,"/races/", url_num, "/",
+                  temp_circuit,"/starting-grid.html")
+
+    f1_races_html <- read_html(url)
+
+    temp_start <- f1_races_html %>%
+      html_element("table.resultsarchive-table") %>%
+      html_table() %>%
+      as.data.frame()
+
+    names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "empty_2")
+
+    temp_race <- temp_df$race[i]
+
+    temp_start <- temp_start %>%
+      mutate(Race = temp_race,
+             Circuit = temp_circuit,
+             Year = temp_year)
+
+
+
+
+
+    f1_races_starts <- rbind(f1_races_starts, temp_start)
+
+  }
+
+  sprint_grid <- f1_races_starts %>%
+    mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
+    separate(Driver, c("First", "Last", "Driver")) %>%
+    dplyr::rename('Position' = 'Pos',
+                  'CarNumber' = 'No') %>%
+    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year)
+
+
+
+
+
+  return(sprint_grid)
+}
+
+#' Scrape the formula1.com website for practice sessions for each Grand Prix for a given year.
+#'
+#' @param year A numeric value.
+#' @param practice_session_number A numeric value.
+#'
+#' @return A dataframe.
+#' @import tidyverse
+#' @import rvest
+#' @import dplyr
+#' @import tidyr
+#' @export
+#'
+#' @examples
+#' year <- 2022
+#' practice_session_number <- 3
+#' practice_session_scraper(year, practice_session_number)
+practice_session_scraper <- function(year, practice_session_number) {
+
+  temp_practice_session_number <- practice_session_number
+
+  temp_year <- year
+
+  f1_races_starts <- data.frame(
+    empty_1 <- integer(),
+    Pos <- integer(),
+    No <- integer(),
+    Driver <- character(),
+    Car <- character(),
+    Time <- character(),
+    empty_2 <- integer(),
+    race <- character(),
+    year <- integer())
+
+
+  temp_df <- grid_urls %>%
+    dplyr::filter(year == temp_year)
+
+  for (i in 1:length(temp_df$year_index)){
+
+    temp_circuit <- temp_df$circuit[i]
+
+    url_num <- temp_df$url[i]
+
+    url <- paste0("https://www.formula1.com/en/results.html/",temp_year,"/races/", url_num, "/",
+                  temp_circuit,"/practice-", temp_practice_session_number,".html")
+
+    f1_races_html <- read_html(url)
+
+    temp_start <- f1_races_html %>%
+      html_element("table.resultsarchive-table") %>%
+      html_table() %>%
+      as.data.frame()
+
+    names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "Time", "Gap", "Laps", "empty_2")
+
+    temp_race <- temp_df$race[i]
+
+    temp_start <- temp_start %>%
+      mutate(Race = temp_race,
+             Circuit = temp_circuit,
+             Year = temp_year)
+
+
+
+
+
+    f1_races_starts <- rbind(f1_races_starts, temp_start)
+
+  }
+
+  practice_times <- f1_races_starts %>%
+    mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
+    separate(Driver, c("First", "Last", "Driver")) %>%
+    dplyr::rename('Position' = 'Pos',
+                  'CarNumber' = 'No') %>%
+    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year)
+
+  return(practice_times)
+}
+
+
+#' Scrape the formula1.com website for qualifying results for each Grand Prix for a given year.
+#'
+#' @param year A numeric value.
+#'
+#' @return A dataframe.
+#' @import tidyverse
+#' @import rvest
+#' @import dplyr
+#' @import tidyr
+#' @export
+#'
+#' @examples
+#' year <- 2022
+#' sprint_grid_scraper(year)
+qualifying_scraper <- function(year) {
+
+  temp_year <- year
+
+  f1_races_starts <- data.frame(
+    empty_1 <- integer(),
+    Pos <- integer(),
+    No <- integer(),
+    Driver <- character(),
+    Car <- character(),
+    Time <- character(),
+    empty_2 <- integer(),
+    race <- character(),
+    year <- integer())
+
+
+  temp_df <- grid_urls %>%
+    dplyr::filter(year == temp_year)
+
+  for (i in 1:length(temp_df$year_index)){
+
+    temp_circuit <- temp_df$circuit[i]
+
+    url_num <- temp_df$url[i]
+
+    url <- paste0("https://www.formula1.com/en/results.html/",temp_year,"/races/", url_num, "/",
+                  temp_circuit,"/qualifying.html")
+
+    f1_races_html <- read_html(url)
+
+    temp_start <- f1_races_html %>%
+      html_element("table.resultsarchive-table") %>%
+      html_table() %>%
+      as.data.frame()
+
+    names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "Q1", "Q2", "Q3", "Laps", "empty_2")
+
+    temp_race <- temp_df$race[i]
+
+    temp_start <- temp_start %>%
+      mutate(Race = temp_race,
+             Circuit = temp_circuit,
+             Year = temp_year)
+
+
+
+
+
+    f1_races_starts <- rbind(f1_races_starts, temp_start)
+
+  }
+
+  qualifying_times <- f1_races_starts %>%
+    mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
+    separate(Driver, c("First", "Last", "Driver")) %>%
+    dplyr::rename('Position' = 'Pos',
+                  'CarNumber' = 'No') %>%
+    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Laps, Q1, Q2, Q3, Race, Circuit, Year)
+
+  return(qualifying_times)
+}
+
+
