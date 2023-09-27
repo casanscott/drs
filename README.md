@@ -142,17 +142,6 @@ following function call:
 
 # Pull race results
 races2022 <- race_result_scraper(2022)
-#> Warning: There was 1 warning in `mutate()`.
-#> ℹ In argument: `Time_secs = period_to_seconds(ms(Time_secs))`.
-#> Caused by warning in `.parse_hms()`:
-#> ! Some strings failed to parse, or all strings are NAs
-#> Warning: There were 21 warnings in `mutate()`.
-#> The first warning was:
-#> ℹ In argument: `fastest_time = ifelse(...)`.
-#> ℹ In group 1: `Race = "abu-dhabi"`.
-#> Caused by warning in `.parse_hms()`:
-#> ! Some strings failed to parse, or all strings are NAs
-#> ℹ Run `dplyr::last_dplyr_warnings()` to see the 20 remaining warnings.
 
 # View the first 6 rows
 head(races2022)

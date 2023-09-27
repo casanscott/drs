@@ -95,7 +95,7 @@ head(grids2022)
 
 To scrape the race results for every Grand Prix during 2022, use the following function call:
 
-```{r example 2}
+```{r example race results, warning= F, message= F}
 
 # Pull race results
 races2022 <- race_result_scraper(2022)
