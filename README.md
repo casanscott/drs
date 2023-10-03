@@ -7,13 +7,17 @@
 
 <br /> <br />
 
-**drs** is an R package that utilizes functions from **rvest** and
-**dplyr** to scrape and tidy data from the formula1.com website. It is
-designed to scrape data for all Grand Prix weekends during a given year.
-A Grand Prix weekend consists of practice sessions, qualifying, and a
-race. Additionally, some weekends will also include a sprint race (an
+**drs** (**D**ata for **R**acing **S**imulations) is an R package that
+utilizes functions from the **rvest** and **dplyr** packages to scrape
+and tidy data from the formula1.com website. It is designed to scrape
+data for all Grand Prix weekends during a given year. A Grand Prix
+weekend consists of practice sessions, qualifying, and a race.
+Additionally, some weekends will also include a sprint race (an
 abbreviated sprint race that is typically about 1/3 the length of a
-normal race).
+normal race). If you currently follow Formula 1, you’ll recognize that
+DRS also standing for *Drag Reduction System*, which is a crucial
+component of Formula 1 cars that opens space in the rear wing thereby
+reducing drag.
 
 A typical Formula 1 weekend begins with three practice sessions. The
 first two practice sessions (FP1 and FP2) are held on Friday. On
