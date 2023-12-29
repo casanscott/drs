@@ -306,10 +306,13 @@ practice_session_scraper <- function(year, practice_session_number) {
 
     f1_races_html <- read_html(url)
 
+
     temp_start <- f1_races_html %>%
       html_element("table.resultsarchive-table") %>%
       html_table() %>%
       as.data.frame()
+
+    if(length(names(temp_start)) > 9) next
 
     names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "Time", "Gap", "Laps", "empty_2")
 
