@@ -45,7 +45,7 @@ A typical Formula 1 weekend begins with three practice sessions. The first two p
 You can install the development version of **drs** here:
 
 ``` r
-install_github("/casanscott/drs")
+install_github("casanscott/drs")
 ```
 
 ## Examples
