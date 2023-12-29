@@ -48,7 +48,7 @@ place on Sunday.
 You can install the development version of **drs** here:
 
 ``` r
-install_github("/casanscott/drs")
+install_github("casanscott/drs")
 ```
 
 ## Examples
