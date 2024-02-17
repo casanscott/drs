@@ -14,8 +14,8 @@ data for all Grand Prix weekends during a given year. A Grand Prix
 weekend consists of practice sessions, qualifying, and a race.
 Additionally, some weekends will also include a sprint race (an
 abbreviated sprint race that is typically about 1/3 the length of a
-normal race). If you currently follow Formula 1, you’ll recognize that
-DRS also standing for *Drag Reduction System*, which is a crucial
+normal race). If you currently follow Formula 1, you will recognize that
+**DRS** also stands for *Drag Reduction System*, which is a crucial
 component of Formula 1 cars that opens space in the rear wing thereby
 reducing drag.
 
