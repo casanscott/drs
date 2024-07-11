@@ -35,6 +35,8 @@ starting_grid_scraper <- function(year) {
 
   for (i in 1:length(temp_df$year_index)){
 
+    tryCatch({
+
     temp_circuit <- temp_df$circuit[i]
 
     url_num <- temp_df$url[i]
@@ -63,6 +65,8 @@ starting_grid_scraper <- function(year) {
 
 
     f1_races_starts <- rbind(f1_races_starts, temp_start)
+
+     }, error=function(e){})
 
   }
 
@@ -122,6 +126,8 @@ race_result_scraper <- function(year) {
 
   for (i in 1:length(temp_df$year_index)){
 
+    tryCatch({
+
     temp_circuit <- temp_df$circuit[i]
 
     url_num <- temp_df$url[i]
@@ -150,6 +156,8 @@ race_result_scraper <- function(year) {
 
 
     f1_races_starts <- rbind(f1_races_starts, temp_start)
+
+     }, error=function(e){})
 
   }
 
@@ -222,6 +230,8 @@ sprint_grid_scraper <- function(year) {
 
   for (i in 1:length(temp_df$year_index)){
 
+    tryCatch({
+
     temp_circuit <- temp_df$circuit[i]
 
     url_num <- temp_df$url[i]
@@ -250,6 +260,8 @@ sprint_grid_scraper <- function(year) {
 
 
     f1_races_starts <- rbind(f1_races_starts, temp_start)
+
+    }, error=function(e){})
 
   }
 
@@ -315,6 +327,8 @@ practice_session_scraper <- function(year, practice_session_number) {
 
   for (i in 1:length(temp_df$year_index)){
 
+    tryCatch({
+
     temp_circuit <- temp_df$circuit[i]
 
     url_num <- temp_df$url[i]
@@ -346,6 +360,8 @@ practice_session_scraper <- function(year, practice_session_number) {
 
 
     f1_races_starts <- rbind(f1_races_starts, temp_start)
+
+      }, error=function(e){})
 
   }
 
@@ -404,6 +420,8 @@ qualifying_scraper <- function(year) {
 
   for (i in 1:length(temp_df$year_index)){
 
+    tryCatch({
+
     temp_circuit <- temp_df$circuit[i]
 
     url_num <- temp_df$url[i]
@@ -432,6 +450,8 @@ qualifying_scraper <- function(year) {
 
 
     f1_races_starts <- rbind(f1_races_starts, temp_start)
+
+      }, error=function(e){})
 
   }
 
