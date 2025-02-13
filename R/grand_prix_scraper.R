@@ -47,11 +47,11 @@ starting_grid_scraper <- function(year) {
     f1_races_html <- read_html(url)
 
     temp_start <- f1_races_html %>%
-      html_element("table.resultsarchive-table") %>%
-      html_table() %>%
+      html_nodes(xpath = '//*[@id="maincontent"]/div/div[2]/div/div[2]/div[2]/div/div[3]/div[2]/table') %>%
+      html_table(fill = TRUE) %>%
       as.data.frame()
 
-    names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "Time", "empty_2")
+    names(temp_start) <- c("Pos", "No", "Driver",  "Car", "Time")
 
     temp_race <- temp_df$race[i]
 
@@ -72,7 +72,11 @@ starting_grid_scraper <- function(year) {
 
   qualifying_times <- f1_races_starts %>%
     mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
-    separate(Driver, c("First", "Last", "Driver")) %>%
+    separate(Driver, c("First", "Lastname")) %>%
+    mutate(Last = str_sub(Lastname, 1, nchar(Lastname) - 3),
+           Driver = str_sub(Lastname, -3)) %>%
+    dplyr::select(-Lastname) %>%  # Remove the original column
+    relocate(Last, Driver, .after = First) %>%  # Relocate after "First" column
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
     mutate(Driver = ifelse(Driver == 'ikk', 'RAI', Driver),
@@ -138,11 +142,11 @@ race_result_scraper <- function(year) {
     f1_races_html <- read_html(url)
 
     temp_start <- f1_races_html %>%
-      html_element("table.resultsarchive-table") %>%
-      html_table() %>%
+      html_nodes(xpath = '//*[@id="maincontent"]/div/div[2]/div/div[2]/div[2]/div/div[3]/div[2]/table') %>%
+      html_table(fill = TRUE) %>%
       as.data.frame()
 
-    names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "laps", "Time", "pts", "empty_2")
+    names(temp_start) <- c("Pos", "No", "Driver",  "Car", "laps", "Time", "pts")
 
     temp_race <- temp_df$race[i]
 
@@ -163,7 +167,11 @@ race_result_scraper <- function(year) {
 
   race_times <- f1_races_starts %>%
     mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
-    separate(Driver, c("First", "Last", "Driver")) %>%
+    separate(Driver, c("First", "Lastname")) %>%
+    mutate(Last = str_sub(Lastname, 1, nchar(Lastname) - 3),
+           Driver = str_sub(Lastname, -3)) %>%
+    dplyr::select(-Lastname) %>%  # Remove the original column
+    relocate(Last, Driver, .after = First) %>%  # Relocate after "First" column
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No',
                   'Laps' = 'laps',
@@ -185,7 +193,8 @@ race_result_scraper <- function(year) {
            fastest_time = ifelse(Position == 1, fastest_time, min(fastest_time, na.rm = T)),
            Time_secs = ifelse(Position == 1, fastest_time, Time_secs + fastest_time)) %>%
     dplyr::select(-fastest_time) %>%
-    ungroup()
+    ungroup() %>%
+    dplyr::filter(!str_detect(Position, "Note"))
 
 
 
@@ -213,13 +222,11 @@ sprint_grid_scraper <- function(year) {
   temp_year <- year
 
   f1_races_starts <- data.frame(
-    empty_1 <- integer(),
     Pos <- integer(),
     No <- integer(),
     Driver <- character(),
     Car <- character(),
     Time <- character(),
-    empty_2 <- integer(),
     race <- character(),
     year <- integer())
 
@@ -242,11 +249,11 @@ sprint_grid_scraper <- function(year) {
     f1_races_html <- read_html(url)
 
     temp_start <- f1_races_html %>%
-      html_element("table.resultsarchive-table") %>%
-      html_table() %>%
+      html_nodes(xpath = '//*[@id="maincontent"]/div/div[2]/div/div[2]/div[2]/div/div[3]/div[2]/table') %>%
+      html_table(fill = TRUE) %>%
       as.data.frame()
 
-    names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "empty_2")
+    names(temp_start) <- c("Pos", "No", "Driver",  "Car")
 
     temp_race <- temp_df$race[i]
 
@@ -267,7 +274,11 @@ sprint_grid_scraper <- function(year) {
 
   sprint_grid <- f1_races_starts %>%
     mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
-    separate(Driver, c("First", "Last", "Driver")) %>%
+    separate(Driver, c("First", "Lastname")) %>%
+    mutate(Last = str_sub(Lastname, 1, nchar(Lastname) - 3),
+           Driver = str_sub(Lastname, -3)) %>%
+    dplyr::select(-Lastname) %>%  # Remove the original column
+    relocate(Last, Driver, .after = First) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
     mutate(Driver = ifelse(Driver == 'ikk', 'RAI', Driver),
@@ -277,8 +288,8 @@ sprint_grid_scraper <- function(year) {
            Last = ifelse(Driver == 'DIV', 'di Resta', Last),
            Last = ifelse(Driver == 'JEV', 'Eric Vergne', Last)) %>%
     dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year) %>%
-    mutate(Time_secs = ifelse(Race == 'sakhir', paste0("0:", Time), Time),
-           Time_secs = period_to_seconds(ms(Time_secs)))
+      ungroup() %>%
+      dplyr::filter(!str_detect(Position, "Note"))
 
 
 
@@ -311,13 +322,11 @@ practice_session_scraper <- function(year, practice_session_number) {
   temp_year <- year
 
   f1_races_starts <- data.frame(
-    empty_1 <- integer(),
     Pos <- integer(),
     No <- integer(),
     Driver <- character(),
     Car <- character(),
     Time <- character(),
-    empty_2 <- integer(),
     race <- character(),
     year <- integer())
 
@@ -340,13 +349,13 @@ practice_session_scraper <- function(year, practice_session_number) {
 
 
     temp_start <- f1_races_html %>%
-      html_element("table.resultsarchive-table") %>%
-      html_table() %>%
+      html_nodes(xpath = '//*[@id="maincontent"]/div/div[2]/div/div[2]/div[2]/div/div[3]/div[2]/table') %>%
+      html_table(fill = TRUE) %>%
       as.data.frame()
 
     if(length(names(temp_start)) > 9) next
 
-    names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "Time", "Gap", "Laps", "empty_2")
+    names(temp_start) <- c("Pos", "No", "Driver",  "Car", "Time", "Gap", "Laps")
 
     temp_race <- temp_df$race[i]
 
@@ -367,7 +376,11 @@ practice_session_scraper <- function(year, practice_session_number) {
 
   practice_times <- f1_races_starts %>%
     mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
-    separate(Driver, c("First", "Last", "Driver")) %>%
+    separate(Driver, c("First", "Lastname")) %>%
+    mutate(Last = str_sub(Lastname, 1, nchar(Lastname) - 3),
+           Driver = str_sub(Lastname, -3)) %>%
+    dplyr::select(-Lastname) %>%  # Remove the original column
+    relocate(Last, Driver, .after = First) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
     mutate(Driver = ifelse(Driver == 'ikk', 'RAI', Driver),
@@ -432,11 +445,11 @@ qualifying_scraper <- function(year) {
     f1_races_html <- read_html(url)
 
     temp_start <- f1_races_html %>%
-      html_element("table.resultsarchive-table") %>%
-      html_table() %>%
+      html_nodes(xpath = '//*[@id="maincontent"]/div/div[2]/div/div[2]/div[2]/div/div[3]/div[2]/table') %>%
+      html_table(fill = TRUE) %>%
       as.data.frame()
 
-    names(temp_start) <- c("empty_1", "Pos", "No", "Driver",  "Car", "Q1", "Q2", "Q3", "Laps", "empty_2")
+    names(temp_start) <- c("Pos", "No", "Driver",  "Car", "Q1", "Q2", "Q3", "Laps")
 
     temp_race <- temp_df$race[i]
 
@@ -457,7 +470,11 @@ qualifying_scraper <- function(year) {
 
   qualifying_times <- f1_races_starts %>%
     mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
-    separate(Driver, c("First", "Last", "Driver")) %>%
+    separate(Driver, c("First", "Lastname")) %>%
+    mutate(Last = str_sub(Lastname, 1, nchar(Lastname) - 3),
+           Driver = str_sub(Lastname, -3)) %>%
+    dplyr::select(-Lastname) %>%  # Remove the original column
+    relocate(Last, Driver, .after = First) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
     mutate(Driver = ifelse(Driver == 'ikk', 'RAI', Driver),
@@ -472,7 +489,9 @@ qualifying_scraper <- function(year) {
            Q2_secs = ifelse(Race == 'sakhir', paste0("0:", Q2), Q2),
            Q2_secs = period_to_seconds(ms(Q2_secs)),
            Q3_secs = ifelse(Race == 'sakhir', paste0("0:", Q3), Q3),
-           Q3_secs = period_to_seconds(ms(Q3_secs)))
+           Q3_secs = period_to_seconds(ms(Q3_secs))) %>%
+    ungroup() %>%
+    dplyr::filter(!str_detect(Position, "Q"))
 
   return(qualifying_times)
 }
