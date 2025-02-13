@@ -72,20 +72,11 @@ starting_grid_scraper <- function(year) {
 
   qualifying_times <- f1_races_starts %>%
     mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
-    separate(Driver, c("First", "Lastname")) %>%
-    mutate(Last = str_sub(Lastname, 1, nchar(Lastname) - 3),
-           Driver = str_sub(Lastname, -3)) %>%
-    dplyr::select(-Lastname) %>%  # Remove the original column
-    relocate(Last, Driver, .after = First) %>%  # Relocate after "First" column
+    mutate(Name = str_trim(str_sub(Driver, 1, nchar(Driver) - 3)),
+           Driver = str_sub(Driver, -3)) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
-    mutate(Driver = ifelse(Driver == 'ikk', 'RAI', Driver),
-           Driver = ifelse(Driver == 'Resta', 'DIV', Driver),
-           Driver = ifelse(Driver == 'Vergne', 'JEV', Driver)) %>%
-    mutate(Last = ifelse(Driver == 'RAI', "Raikkonen", Last),
-           Last = ifelse(Driver == 'DIV', 'di Resta', Last),
-           Last = ifelse(Driver == 'JEV', 'Eric Vergne', Last)) %>%
-    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year) %>%
+    dplyr::select(Position, CarNumber, Name, Driver, Car, Time, Race, Circuit, Year) %>%
     mutate(Time_secs = ifelse(Race == 'sakhir', paste0("0:", Time), Time),
            Time_secs = period_to_seconds(ms(Time_secs)))
 
@@ -167,22 +158,13 @@ race_result_scraper <- function(year) {
 
   race_times <- f1_races_starts %>%
     mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
-    separate(Driver, c("First", "Lastname")) %>%
-    mutate(Last = str_sub(Lastname, 1, nchar(Lastname) - 3),
-           Driver = str_sub(Lastname, -3)) %>%
-    dplyr::select(-Lastname) %>%  # Remove the original column
-    relocate(Last, Driver, .after = First) %>%  # Relocate after "First" column
+    mutate(Name = str_trim(str_sub(Driver, 1, nchar(Driver) - 3)),
+           Driver = str_sub(Driver, -3)) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No',
                   'Laps' = 'laps',
                   'Points' = 'pts') %>%
-    mutate(Driver = ifelse(Driver == 'ikk', 'RAI', Driver),
-           Driver = ifelse(Driver == 'Resta', 'DIV', Driver),
-           Driver = ifelse(Driver == 'Vergne', 'JEV', Driver)) %>%
-    mutate(Last = ifelse(Driver == 'RAI', "Raikkonen", Last),
-           Last = ifelse(Driver == 'DIV', 'di Resta', Last),
-           Last = ifelse(Driver == 'JEV', 'Eric Vergne', Last)) %>%
-    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Laps, Time, Points,
+    dplyr::select(Position, CarNumber, Name, Driver, Car, Laps, Time, Points,
                   Race, Circuit, Year) %>%
     mutate(Time_secs = ifelse(Race == 'sakhir', paste0("0:", Time), Time),
            Time_secs = period_to_seconds(ms(Time_secs))) %>%
@@ -274,20 +256,11 @@ sprint_grid_scraper <- function(year) {
 
   sprint_grid <- f1_races_starts %>%
     mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
-    separate(Driver, c("First", "Lastname")) %>%
-    mutate(Last = str_sub(Lastname, 1, nchar(Lastname) - 3),
-           Driver = str_sub(Lastname, -3)) %>%
-    dplyr::select(-Lastname) %>%  # Remove the original column
-    relocate(Last, Driver, .after = First) %>%
+    mutate(Name = str_trim(str_sub(Driver, 1, nchar(Driver) - 3)),
+           Driver = str_sub(Driver, -3)) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
-    mutate(Driver = ifelse(Driver == 'ikk', 'RAI', Driver),
-           Driver = ifelse(Driver == 'Resta', 'DIV', Driver),
-           Driver = ifelse(Driver == 'Vergne', 'JEV', Driver)) %>%
-    mutate(Last = ifelse(Driver == 'RAI', "Raikkonen", Last),
-           Last = ifelse(Driver == 'DIV', 'di Resta', Last),
-           Last = ifelse(Driver == 'JEV', 'Eric Vergne', Last)) %>%
-    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year) %>%
+    dplyr::select(Position, CarNumber, Name, Driver, Car, Time, Race, Circuit, Year) %>%
       ungroup() %>%
       dplyr::filter(!str_detect(Position, "Note"))
 
@@ -376,20 +349,11 @@ practice_session_scraper <- function(year, practice_session_number) {
 
   practice_times <- f1_races_starts %>%
     mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
-    separate(Driver, c("First", "Lastname")) %>%
-    mutate(Last = str_sub(Lastname, 1, nchar(Lastname) - 3),
-           Driver = str_sub(Lastname, -3)) %>%
-    dplyr::select(-Lastname) %>%  # Remove the original column
-    relocate(Last, Driver, .after = First) %>%
+    mutate(Name = str_trim(str_sub(Driver, 1, nchar(Driver) - 3)),
+           Driver = str_sub(Driver, -3)) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
-    mutate(Driver = ifelse(Driver == 'ikk', 'RAI', Driver),
-           Driver = ifelse(Driver == 'Resta', 'DIV', Driver),
-           Driver = ifelse(Driver == 'Vergne', 'JEV', Driver)) %>%
-    mutate(Last = ifelse(Driver == 'RAI', "Raikkonen", Last),
-           Last = ifelse(Driver == 'DIV', 'di Resta', Last),
-           Last = ifelse(Driver == 'JEV', 'Eric Vergne', Last)) %>%
-    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Time, Race, Circuit, Year) %>%
+    dplyr::select(Position, CarNumber, Name, Driver, Car, Time, Race, Circuit, Year) %>%
     mutate(Time_secs = ifelse(Race == 'sakhir', paste0("0:", Time), Time),
            Time_secs = period_to_seconds(ms(Time_secs)))
 
@@ -470,20 +434,11 @@ qualifying_scraper <- function(year) {
 
   qualifying_times <- f1_races_starts %>%
     mutate(Driver = str_replace(Driver, 'De Vries', 'DeVries')) %>%
-    separate(Driver, c("First", "Lastname")) %>%
-    mutate(Last = str_sub(Lastname, 1, nchar(Lastname) - 3),
-           Driver = str_sub(Lastname, -3)) %>%
-    dplyr::select(-Lastname) %>%  # Remove the original column
-    relocate(Last, Driver, .after = First) %>%
+    mutate(Name = str_trim(str_sub(Driver, 1, nchar(Driver) - 3)),
+           Driver = str_sub(Driver, -3)) %>%
     dplyr::rename('Position' = 'Pos',
                   'CarNumber' = 'No') %>%
-    mutate(Driver = ifelse(Driver == 'ikk', 'RAI', Driver),
-           Driver = ifelse(Driver == 'Resta', 'DIV', Driver),
-           Driver = ifelse(Driver == 'Vergne', 'JEV', Driver)) %>%
-    mutate(Last = ifelse(Driver == 'RAI', "Raikkonen", Last),
-           Last = ifelse(Driver == 'DIV', 'di Resta', Last),
-           Last = ifelse(Driver == 'JEV', 'Eric Vergne', Last)) %>%
-    dplyr::select(Position, CarNumber, First, Last, Driver, Car, Laps, Q1, Q2, Q3, Race, Circuit, Year) %>%
+    dplyr::select(Position, CarNumber, Name, Driver, Car, Laps, Q1, Q2, Q3, Race, Circuit, Year) %>%
     mutate(Q1_secs = ifelse(Race == 'sakhir', paste0("0:", Q1), Q1),
            Q1_secs = period_to_seconds(ms(Q1_secs)),
            Q2_secs = ifelse(Race == 'sakhir', paste0("0:", Q2), Q2),
@@ -491,7 +446,8 @@ qualifying_scraper <- function(year) {
            Q3_secs = ifelse(Race == 'sakhir', paste0("0:", Q3), Q3),
            Q3_secs = period_to_seconds(ms(Q3_secs))) %>%
     ungroup() %>%
-    dplyr::filter(!str_detect(Position, "Q"))
+    dplyr::filter(!str_detect(Position, "Q"),
+                  !str_detect(Position, "Note"))
 
   return(qualifying_times)
 }
